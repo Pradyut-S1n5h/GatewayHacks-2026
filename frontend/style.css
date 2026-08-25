@@ -1,0 +1,702 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --background: #070a12;
+    --surface: #101522;
+    --surface-light: #171d2d;
+    --border: rgba(255, 255, 255, 0.09);
+
+    --text: #f5f7ff;
+    --muted: #9da6bb;
+
+    --primary: #6c7cff;
+    --primary-light: #8794ff;
+
+    --success: #4ade80;
+    --warning: #facc15;
+
+    --radius: 18px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(108, 124, 255, 0.15),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(120, 80, 255, 0.12),
+            transparent 30%
+        ),
+        var(--background);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 22px 6%;
+
+    border-bottom: 1px solid var(--border);
+
+    backdrop-filter: blur(15px);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.logo-mark {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: var(--primary);
+
+    font-weight: 800;
+}
+
+.nav-button {
+    padding: 10px 17px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.nav-button:hover {
+    background: var(--surface-light);
+}
+
+
+/* SCREENS */
+
+.screen {
+    display: none;
+    min-height: calc(100vh - 80px);
+
+    padding: 80px 6%;
+}
+
+.screen.active {
+    display: block;
+}
+
+
+/* HERO */
+
+.hero {
+    max-width: 850px;
+    margin: 50px auto 90px;
+
+    text-align: center;
+}
+
+.badge {
+    display: inline-block;
+
+    padding: 8px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: var(--primary-light);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 7vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -3px;
+}
+
+.hero h1 span {
+    color: var(--primary-light);
+}
+
+.hero-text {
+    max-width: 650px;
+
+    margin: 28px auto;
+
+    color: var(--muted);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 14px 22px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.primary-button span {
+    font-size: 20px;
+}
+
+.hero-note {
+    margin-top: 18px;
+
+    color: #6f7890;
+
+    font-size: 12px;
+}
+
+
+/* FEATURES */
+
+.feature-grid {
+    max-width: 1050px;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.feature-card {
+    padding: 28px;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    background: rgba(16, 21, 34, 0.75);
+
+    transition: 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(108, 124, 255, 0.35);
+}
+
+.feature-icon {
+    color: var(--primary-light);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    margin-bottom: 25px;
+}
+
+.feature-card h3 {
+    margin-bottom: 10px;
+
+    font-size: 19px;
+}
+
+.feature-card p {
+    color: var(--muted);
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+
+/* DIAGNOSTIC */
+
+.diagnostic-container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.diagnostic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+    margin-bottom: 25px;
+}
+
+.small-label {
+    color: var(--primary-light);
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+}
+
+.diagnostic-header h2,
+.results-container h2,
+.learning-container h2 {
+    font-size: clamp(30px, 5vw, 48px);
+    letter-spacing: -1.5px;
+}
+
+#question-counter {
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 5px;
+
+    overflow: hidden;
+
+    background: var(--surface-light);
+
+    border-radius: 10px;
+
+    margin-bottom: 30px;
+}
+
+#progress {
+    width: 20%;
+    height: 100%;
+
+    background: var(--primary);
+
+    transition: width 0.3s;
+}
+
+.question-card {
+    padding: 35px;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    background: var(--surface);
+}
+
+.question-topic {
+    color: var(--primary-light);
+
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    margin-bottom: 20px;
+}
+
+.question-card h3 {
+    font-size: 24px;
+    line-height: 1.4;
+
+    margin-bottom: 30px;
+}
+
+.answers {
+    display: grid;
+    gap: 12px;
+}
+
+.answer-button {
+    width: 100%;
+
+    padding: 17px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--surface-light);
+
+    color: var(--text);
+
+    text-align: left;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.answer-button:hover {
+    border-color: var(--primary);
+    transform: translateX(3px);
+}
+
+.answer-button.correct {
+    border-color: var(--success);
+}
+
+.answer-button.incorrect {
+    border-color: #f87171;
+}
+
+.diagnostic-info {
+    margin-top: 18px;
+
+    color: #6f7890;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* RESULTS */
+
+.results-container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.results-intro {
+    max-width: 650px;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+
+    margin: 20px 0 40px;
+}
+
+.skill-map {
+    margin-bottom: 40px;
+}
+
+.skill {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 18px 20px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background: var(--surface);
+}
+
+.skill > span {
+    width: 32px;
+    height: 32px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    font-weight: 800;
+}
+
+.mastered > span {
+    background: rgba(74, 222, 128, 0.12);
+    color: var(--success);
+}
+
+.needs-work > span {
+    background: rgba(250, 204, 21, 0.12);
+    color: var(--warning);
+}
+
+.locked > span {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--muted);
+}
+
+.skill strong {
+    display: block;
+}
+
+.skill small {
+    display: block;
+
+    color: var(--muted);
+
+    margin-top: 4px;
+}
+
+.connector {
+    width: 2px;
+    height: 20px;
+
+    margin-left: 35px;
+
+    background: var(--border);
+}
+
+.recommendation {
+    padding: 30px;
+
+    border: 1px solid rgba(108, 124, 255, 0.3);
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(108, 124, 255, 0.1),
+            rgba(16, 21, 34, 0.8)
+        );
+}
+
+.recommendation-label {
+    color: var(--primary-light);
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+
+    margin-bottom: 12px;
+}
+
+.recommendation h3 {
+    font-size: 24px;
+
+    margin-bottom: 10px;
+}
+
+.recommendation p {
+    color: var(--muted);
+
+    line-height: 1.6;
+
+    margin-bottom: 22px;
+}
+
+
+/* LEARNING */
+
+.learning-container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.lesson-card {
+    margin-top: 35px;
+
+    padding: 35px;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    background: var(--surface);
+}
+
+.lesson-section {
+    margin-bottom: 35px;
+}
+
+.lesson-section h3 {
+    margin-bottom: 12px;
+}
+
+.lesson-section p {
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+.example-box {
+    padding: 25px;
+
+    margin-bottom: 35px;
+
+    border-radius: 14px;
+
+    background: var(--surface-light);
+}
+
+.example-label {
+    color: var(--primary-light);
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+
+    margin-bottom: 15px;
+}
+
+.equation {
+    font-size: 28px;
+    font-weight: 700;
+
+    margin-bottom: 15px;
+}
+
+.example-box p {
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+.practice-options {
+    display: grid;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.practice-options button {
+    padding: 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--surface-light);
+
+    color: var(--text);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.practice-options button:hover {
+    border-color: var(--primary);
+}
+
+#practice-result {
+    margin-top: 15px;
+
+    font-weight: 600;
+}
+
+
+/* FOOTER */
+
+footer {
+    padding: 30px 6%;
+
+    border-top: 1px solid var(--border);
+
+    color: #697289;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 17px 5%;
+    }
+
+    .nav-button {
+        display: none;
+    }
+
+    .screen {
+        padding: 55px 5%;
+    }
+
+    .hero {
+        margin-top: 20px;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .hero-text {
+        font-size: 15px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+        padding: 22px;
+    }
+
+    .question-card,
+    .lesson-card {
+        padding: 23px;
+    }
+
+    .diagnostic-header {
+        align-items: start;
+    }
+
+    .diagnostic-header h2 {
+        font-size: 29px;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+    }
+
+    .recommendation {
+        padding: 23px;
+    }
+
+    .equation {
+        font-size: 22px;
+    }
+}
