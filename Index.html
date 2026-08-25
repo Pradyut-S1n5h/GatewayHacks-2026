@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LearnNext — Personalized Learning</title>
+    <meta
+        name="description"
+        content="An India-first learning gap engine that helps students discover what they need to learn next."
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-mark">L</span>
+            <span>LearnNext</span>
+        </div>
+
+        <button class="nav-button" onclick="startDiagnostic()">
+            Start Diagnostic
+        </button>
+    </header>
+
+
+    <main>
+
+        <!-- HOME -->
+        <section id="home" class="screen active">
+
+            <div class="hero">
+
+                <div class="badge">
+                    CBSE Class 9 Mathematics
+                </div>
+
+                <h1>
+                    Find out what<br>
+                    <span>you need to learn next.</span>
+                </h1>
+
+                <p class="hero-text">
+                    LearnNext identifies learning gaps, finds missing prerequisites,
+                    and creates a personalized path to help you move forward.
+                </p>
+
+                <button class="primary-button" onclick="startDiagnostic()">
+                    Start Diagnostic
+                    <span>→</span>
+                </button>
+
+                <div class="hero-note">
+                    Free prototype · Personalized learning · Built for students
+                </div>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon">01</div>
+                    <h3>Diagnose</h3>
+                    <p>
+                        Discover which concepts you understand and where gaps exist.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">02</div>
+                    <h3>Map</h3>
+                    <p>
+                        Connect learning gaps to the prerequisite concepts behind them.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">03</div>
+                    <h3>Learn</h3>
+                    <p>
+                        Follow a targeted learning path instead of repeating everything.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DIAGNOSTIC -->
+        <section id="diagnostic" class="screen">
+
+            <div class="diagnostic-container">
+
+                <div class="diagnostic-header">
+
+                    <div>
+                        <div class="small-label">DIAGNOSTIC</div>
+                        <h2>Let's understand what you know.</h2>
+                    </div>
+
+                    <div id="question-counter">
+                        1 / 5
+                    </div>
+
+                </div>
+
+
+                <div class="progress-bar">
+                    <div id="progress"></div>
+                </div>
+
+
+                <div class="question-card">
+
+                    <div class="question-topic" id="question-topic">
+                        Algebra
+                    </div>
+
+                    <h3 id="question">
+                        Loading question...
+                    </h3>
+
+                    <div id="answers" class="answers"></div>
+
+                </div>
+
+
+                <p class="diagnostic-info">
+                    Don't worry about getting everything right.
+                    Your answers help build your learning map.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTS -->
+        <section id="results" class="screen">
+
+            <div class="results-container">
+
+                <div class="small-label">YOUR LEARNING MAP</div>
+
+                <h2>
+                    Here's where you can improve.
+                </h2>
+
+                <p class="results-intro">
+                    Your diagnostic suggests that some concepts may need
+                    reinforcement before moving forward.
+                </p>
+
+
+                <div class="skill-map">
+
+                    <div class="skill mastered">
+                        <span>✓</span>
+                        <div>
+                            <strong>Basic Algebra</strong>
+                            <small>Strong foundation</small>
+                        </div>
+                    </div>
+
+                    <div class="connector"></div>
+
+                    <div class="skill needs-work">
+                        <span>!</span>
+                        <div>
+                            <strong>Algebraic Identities</strong>
+                            <small>Needs practice</small>
+                        </div>
+                    </div>
+
+                    <div class="connector"></div>
+
+                    <div class="skill locked">
+                        <span>?</span>
+                        <div>
+                            <strong>Factorisation</strong>
+                            <small>Prerequisite gap detected</small>
+                        </div>
+                    </div>
+
+                    <div class="connector"></div>
+
+                    <div class="skill locked">
+                        <span>?</span>
+                        <div>
+                            <strong>Linear Equations</strong>
+                            <small>We'll check this next</small>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="recommendation">
+
+                    <div class="recommendation-label">
+                        RECOMMENDED NEXT STEP
+                    </div>
+
+                    <h3>Strengthen Algebraic Identities</h3>
+
+                    <p>
+                        Before moving forward, let's reinforce this prerequisite
+                        concept through a short lesson and targeted practice.
+                    </p>
+
+                    <button class="primary-button" onclick="startLearning()">
+                        Start Learning
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- LEARNING -->
+        <section id="learning" class="screen">
+
+            <div class="learning-container">
+
+                <div class="small-label">
+                    PERSONALIZED LESSON
+                </div>
+
+                <h2>
+                    Algebraic Identities
+                </h2>
+
+                <div class="lesson-card">
+
+                    <div class="lesson-section">
+                        <h3>Why are we learning this?</h3>
+
+                        <p>
+                            Algebraic identities help us simplify and transform
+                            mathematical expressions. They are an important
+                            prerequisite for factorisation.
+                        </p>
+                    </div>
+
+
+                    <div class="example-box">
+
+                        <div class="example-label">
+                            EXAMPLE
+                        </div>
+
+                        <div class="equation">
+                            (a + b)² = a² + 2ab + b²
+                        </div>
+
+                        <p>
+                            This identity lets us expand an expression without
+                            multiplying every term separately.
+                        </p>
+
+                    </div>
+
+
+                    <div class="lesson-section">
+
+                        <h3>Try this</h3>
+
+                        <p>
+                            Which expression is equal to
+                            <strong>(x + 3)²</strong>?
+                        </p>
+
+                        <div class="practice-options">
+
+                            <button onclick="checkPractice(this, false)">
+                                x² + 3x + 9
+                            </button>
+
+                            <button onclick="checkPractice(this, true)">
+                                x² + 6x + 9
+                            </button>
+
+                            <button onclick="checkPractice(this, false)">
+                                x² + 9
+                            </button>
+
+                        </div>
+
+                        <p id="practice-result"></p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>
+            LearnNext · Personalized learning through learning-gap detection
+        </p>
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
