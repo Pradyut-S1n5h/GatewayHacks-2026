@@ -1,4 +1,4 @@
-"""Core AI content pipeline. Pure logic — no UI, no printing."""
+"""Core AI content pipeline and tutoring logic. Pure logic — no UI, no printing."""
 
 import os
 import re
@@ -71,6 +71,28 @@ def generate_script(
     response = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": build_prompt(idea, num_scenes, tone)}],
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
+    return response.choices[0].message.content.strip()
+
+
+def generate_response(
+    system_prompt: str,
+    user_prompt: str,
+    model: str = DEFAULT_MODEL,
+    max_tokens: int = 1000,
+    temperature: float = 0.7,
+    client: InferenceClient | None = None,
+) -> str:
+    """Generate a conversational or educational response using system and user prompts."""
+    client = client or get_client()
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
         max_tokens=max_tokens,
         temperature=temperature,
     )
