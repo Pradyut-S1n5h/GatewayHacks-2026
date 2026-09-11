@@ -1,16 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from services.ai import run_pipeline, MissingTokenError
-
-from api import student, diagnose, learn, practice
+from api import student, diagnose, learn, practice, performance, test
 
 app = FastAPI(title="GatewayHacks AI Pipeline & Educational API")
 
-# Include feature routers
+# Include all routers
 app.include_router(student.router)
 app.include_router(diagnose.router)
 app.include_router(learn.router)
 app.include_router(practice.router)
+app.include_router(performance.router)
+app.include_router(test.router)
 
 class PipelineRequest(BaseModel):
     idea: str
