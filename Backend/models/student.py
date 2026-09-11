@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-
 class Student(BaseModel):
     student_id: str
     name: Optional[str] = None
@@ -10,7 +9,10 @@ class Student(BaseModel):
     strengths: List[str] = []
     weaknesses: List[str] = []
     learning_level: str = "beginner"
-
+    language: str = "en"  # Supports India-First multilingual design ("en" or "hi")
+    streak: int = 0
+    xp: int = 0
+    rank: str = "Bronze"
 
 class StudentUpdate(BaseModel):
     name: Optional[str] = None
@@ -19,3 +21,7 @@ class StudentUpdate(BaseModel):
     strengths: Optional[List[str]] = None
     weaknesses: Optional[List[str]] = None
     learning_level: Optional[str] = None
+    language: Optional[str] = None
+    streak: Optional[int] = None
+    xp: Optional[int] = None
+    rank: Optional[str] = None
