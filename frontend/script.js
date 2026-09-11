@@ -2,6 +2,11 @@
 // LEARNNEXT - MAIN JAVASCRIPT
 // ===============================
 
+// Backend API Base URL (Change if hosting on a public domain/Codespace URL)
+const API_BASE = "http://localhost:7860"; 
+
+let currentStudentId = "student_123"; // Default student profile
+
 const questions = [
     {
         topic: "Algebra",
@@ -118,15 +123,18 @@ function loadQuestion() {
     const progressElement = document.getElementById("progress");
     const answersContainer = document.getElementById("answers");
 
-    topicElement.textContent = question.topic;
+    if (topicElement) topicElement.textContent = question.topic;
+    if (questionElement) questionElement.textContent = question.question;
 
-    questionElement.textContent = question.question;
+    if (counterElement) {
+        counterElement.textContent = `${currentQuestion + 1} / ${questions.length}`;
+    }
 
-    counterElement.textContent =
-        `${currentQuestion + 1} / ${questions.length}`;
+    if (progressElement) {
+        progressElement.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+    }
 
-    progressElement.style.width =
-        `${((currentQuestion + 1) / questions.length) * 100}%`;
+    if (!answersContainer) return;
 
     answersContainer.innerHTML = "";
 
@@ -174,7 +182,6 @@ function selectAnswer(selectedIndex, selectedButton) {
     if (selectedIndex === question.correct) {
 
         selectedButton.classList.add("correct");
-
         score++;
 
     } else {
@@ -194,13 +201,9 @@ function selectAnswer(selectedIndex, selectedButton) {
         currentQuestion++;
 
         if (currentQuestion < questions.length) {
-
             loadQuestion();
-
         } else {
-
             showResults();
-
         }
 
     }, 900);
@@ -212,9 +215,7 @@ function selectAnswer(selectedIndex, selectedButton) {
 // ===============================
 
 function showResults() {
-
     showScreen("results");
-
     updateResults();
 }
 
@@ -227,92 +228,113 @@ function updateResults() {
 
     const skills = document.querySelectorAll(".skill");
 
-    // If there aren't skill cards, stop safely
     if (!skills.length) {
         return;
     }
 
-    // Calculate percentage
-    const percentage =
-        Math.round((score / questions.length) * 100);
+    const percentage = Math.round((score / questions.length) * 100);
+    console.log("Diagnostic score:", score, "Percentage:", percentage);
 
-    console.log("Diagnostic score:", score);
-    console.log("Percentage:", percentage);
-
-    // Map each question to a skill card
     answersGiven.forEach((answer, index) => {
 
-        if (!skills[index]) {
-            return;
-        }
+        if (!skills[index]) return;
 
         const skill = skills[index];
         const icon = skill.querySelector(".skill-icon");
         const small = skill.querySelector("small");
 
         if (answer.isCorrect) {
-
             skill.classList.remove("needs-work", "locked");
             skill.classList.add("mastered");
 
-            if (icon) {
-                icon.textContent = "✓";
-            }
-
-            if (small) {
-                small.textContent = "Foundation confirmed";
-            }
-
+            if (icon) icon.textContent = "✓";
+            if (small) small.textContent = "Foundation confirmed";
         } else {
-
             skill.classList.remove("mastered", "locked");
             skill.classList.add("needs-work");
 
-            if (icon) {
-                icon.textContent = "!";
-            }
-
-            if (small) {
-                small.textContent = "Attention recommended";
-            }
+            if (icon) icon.textContent = "!";
+            if (small) small.textContent = "Attention recommended";
         }
     });
 
-    // Find first incorrect answer
     const firstWrong = answersGiven.find(answer => !answer.isCorrect);
-
-    const recommendationTitle =
-        document.querySelector(".recommendation h3");
-
-    const recommendationText =
-        document.querySelector(".recommendation p");
+    const recommendationTitle = document.querySelector(".recommendation h3");
+    const recommendationText = document.querySelector(".recommendation p");
 
     if (firstWrong) {
-
         if (recommendationTitle) {
-            recommendationTitle.textContent =
-                `Strengthen ${firstWrong.topic}`;
+            recommendationTitle.textContent = `Strengthen ${firstWrong.topic}`;
         }
-
         if (recommendationText) {
-            recommendationText.textContent =
-                `Your diagnostic suggests that ${firstWrong.topic} needs more practice before moving forward. Let's strengthen this concept with a targeted lesson.`;
+            recommendationText.textContent = `Your diagnostic suggests that ${firstWrong.topic} needs more practice. Let's fetch a targeted AI lesson for this topic.`;
         }
-
+        // Automatically trigger AI lesson preparation for the weak topic
+        fetchAILesson(firstWrong.topic);
     } else {
-
         if (recommendationTitle) {
-            recommendationTitle.textContent =
-                "Excellent foundation!";
+            recommendationTitle.textContent = "Excellent foundation!";
         }
-
         if (recommendationText) {
-            recommendationText.textContent =
-                `You answered all ${questions.length} questions correctly. Your current diagnostic shows a strong foundation.`;
+            recommendationText.textContent = `You answered all ${questions.length} questions correctly. Your current diagnostic shows a strong foundation.`;
         }
     }
+}
 
-    console.log(`Final score: ${score}/${questions.length}`);
+
+// ===============================
+// AI BACKEND INTEGRATION (NEW)
+// ===============================
+
+// 1. Fetch AI Lesson from FastAPI /api/learn
+async function fetchAILesson(topic) {
+    try {
+        const response = await fetch(`${API_BASE}/api/learn/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                student_id: currentStudentId,
+                topic: topic
+            })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            console.log("AI Lesson loaded:", data.lesson);
+            const lessonContainer = document.querySelector("#learning .lesson-content"); // adjust selector based on HTML
+            if (lessonContainer) {
+                lessonContainer.textContent = data.lesson;
+            }
+        }
+    } catch (error) {
+        console.error("Error connecting to backend AI lesson endpoint:", error);
+    }
+}
+
+// 2. Fetch AI Practice Questions from FastAPI /api/practice
+async function fetchAIPractice(topic, count = 3) {
+    try {
+        const response = await fetch(`${API_BASE}/api/practice/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                student_id: currentStudentId,
+                topic: topic,
+                number_of_questions: count
+            })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            console.log("AI Practice generated:", data.practice);
+        }
+    } catch (error) {
+        console.error("Error connecting to backend AI practice endpoint:", error);
+    }
 }
 
 
@@ -321,10 +343,7 @@ function updateResults() {
 // ===============================
 
 function startLearning() {
-
     showScreen("learning");
-
-    // Reset practice question
     resetPractice();
 }
 
@@ -335,38 +354,31 @@ function startLearning() {
 
 function checkPractice(button, isCorrect) {
 
-    const result =
-        document.getElementById("practice-result");
+    const result = document.getElementById("practice-result");
+    const options = document.querySelectorAll(".practice-options button");
 
-    const options =
-        document.querySelectorAll(".practice-options button");
-
-    // Disable all options
     options.forEach(btn => {
         btn.disabled = true;
     });
 
     if (isCorrect) {
-
         button.style.borderColor = "var(--success)";
         button.style.background = "var(--success-bg)";
         button.style.color = "#34d399";
 
-        result.style.color = "#34d399";
-
-        result.textContent =
-            "Correct! (x + 3)² = x² + 6x + 9.";
-
+        if (result) {
+            result.style.color = "#34d399";
+            result.textContent = "Correct! (x + 3)² = x² + 6x + 9.";
+        }
     } else {
-
         button.style.borderColor = "var(--error)";
         button.style.background = "var(--error-bg)";
         button.style.color = "#f87171";
 
-        result.style.color = "#f87171";
-
-        result.textContent =
-            "Not quite. Remember: (x + a)² = x² + 2ax + a².";
+        if (result) {
+            result.style.color = "#f87171";
+            result.textContent = "Not quite. Remember: (x + a)² = x² + 2ax + a².";
+        }
     }
 }
 
@@ -377,16 +389,11 @@ function checkPractice(button, isCorrect) {
 
 function resetPractice() {
 
-    const result =
-        document.getElementById("practice-result");
-
-    const options =
-        document.querySelectorAll(".practice-options button");
+    const result = document.getElementById("practice-result");
+    const options = document.querySelectorAll(".practice-options button");
 
     options.forEach(button => {
-
         button.disabled = false;
-
         button.style.borderColor = "";
         button.style.background = "";
         button.style.color = "";
@@ -403,10 +410,6 @@ function resetPractice() {
 // ===============================
 
 document.addEventListener("DOMContentLoaded", function () {
-
     console.log("LearnNext JavaScript loaded successfully.");
-
-    // Make sure home is visible when the page opens
     showScreen("home");
-
 });
