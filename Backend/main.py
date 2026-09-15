@@ -1,26 +1,18 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from services.ai import run_pipeline, MissingTokenError
-
-from api import student, diagnose, learn, practice
+from api import student, diagnose, learn, practice, performance, test, roadmap  # <--- Import roadmap router
 
 app = FastAPI(title="GatewayHacks AI Pipeline & Educational API")
 
-# Enable CORS for frontend communication
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins for testing
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Include feature routers
+# Include all feature routers
 app.include_router(student.router)
 app.include_router(diagnose.router)
 app.include_router(learn.router)
 app.include_router(practice.router)
+app.include_router(performance.router)
+app.include_router(test.router)
+app.include_router(roadmap.router)  # <--- Register roadmap router
 
 class PipelineRequest(BaseModel):
     idea: str
