@@ -1,5 +1,5 @@
 // Replace with your actual backend public URL (no trailing slash at the end)[span_2](start_span)[span_2](end_span)
-const API_BASE_URL = "https://cautious-winner-xrwv4prx9qg92vwgv-7860.app.github.dev";
+const API_BASE_URL = "yourbackendURL.dev";
 
 async function fetchStudentReport() {
     const outputDiv = document.getElementById("output");
