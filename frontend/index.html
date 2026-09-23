@@ -3,188 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LearnNext — Personalized Learning Engine</title>
-    <meta name="description" content="An India-first learning gap engine that helps students discover what they need to learn next.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>LearnNext - Student Report & Roadmap</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc; 
+            padding: 30px; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: auto; 
+            background: #1e293b; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+        }
+        button { 
+            background: #6366f1; 
+            color: white; 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+        }
+        button:hover { 
+            background: #4f46e5; 
+        }
+        #output { 
+            margin-top: 20px; 
+            background: #0f172a; 
+            padding: 20px; 
+            border-radius: 6px; 
+            white-space: pre-wrap; 
+            font-family: monospace; 
+            max-height: 400px; 
+            overflow-y: auto;
+            color: #38bdf8;
+            border: 1px solid #334155;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>LearnNext Dashboard</h1>
+        <p>Click below to generate and view the student report and roadmap via the FastAPI backend[span_0](start_span)[span_0](end_span):</p>
+        
+        <button onclick="fetchStudentReport()">Generate Student Report & Roadmap</button>
+        
+        <div id="output">Report and roadmap data will appear here...</div>
+    </div>
 
-    <header class="navbar">
-        <div class="logo" onclick="showScreen('home')" style="cursor: pointer;">
-            <span class="logo-mark">L</span>
-            <span>LearnNext</span>
-        </div>
-        <button class="nav-button" onclick="startDiagnostic()">
-            <span>Start Diagnostic</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-    </header>
-
-    <main>
-        <!-- HOME SCREEN -->
-        <section id="home" class="screen active">
-            <div class="hero">
-                <div class="badge">
-                    <span class="badge-dot"></span> CBSE Class 9 Mathematics
-                </div>
-                <h1>Find out what<br><span>you need to learn next.</span></h1>
-                <p class="hero-text">
-                    LearnNext identifies hidden learning gaps, maps missing prerequisites, and crafts a hyper-personalized path forward so you master concepts faster.
-                </p>
-                <div class="hero-cta-group">
-                    <button class="primary-button glow" onclick="startDiagnostic()">
-                        Start Diagnostic Test
-                        <span class="arrow">→</span>
-                    </button>
-                </div>
-                <div class="hero-note">
-                    ✨ Free prototype · Instant gap analysis · Built for students
-                </div>
-            </div>
-
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">01</div>
-                    <h3>Diagnose</h3>
-                    <p>Pinpoint exact comprehension levels across core topics and detect hidden vulnerabilities.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">02</div>
-                    <h3>Map</h3>
-                    <p>Dynamically link learning gaps directly to the root prerequisite concepts behind them.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">03</div>
-                    <h3>Learn</h3>
-                    <p>Follow an adaptive, targeted learning track instead of repeating material you already know.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- DIAGNOSTIC SCREEN -->
-        <section id="diagnostic" class="screen">
-            <div class="diagnostic-container">
-                <div class="diagnostic-header">
-                    <div>
-                        <div class="small-label">DIAGNOSTIC ASSESSMENT</div>
-                        <h2>Let's evaluate your baseline.</h2>
-                    </div>
-                    <div id="question-counter" class="counter-pill">
-                        1 / 5
-                    </div>
-                </div>
-
-                <div class="progress-bar">
-                    <div id="progress"></div>
-                </div>
-
-                <div class="question-card">
-                    <div class="question-topic" id="question-topic">Algebra</div>
-                    <h3 id="question">Loading question...</h3>
-                    <div id="answers" class="answers"></div>
-                </div>
-
-                <p class="diagnostic-info">
-                    💡 Don't stress about mistakes. Every answer builds your custom learning map.
-                </p>
-            </div>
-        </section>
-
-        <!-- RESULTS SCREEN -->
-        <section id="results" class="screen">
-            <div class="results-container">
-                <div class="small-label">DIAGNOSTIC COMPLETE</div>
-                <h2>Here's your custom skill map.</h2>
-                <p class="results-intro">
-                    Based on your responses, we've mapped your structural comprehension and found key prerequisite gaps to target.
-                </p>
-
-                <div class="skill-map">
-                    <div class="skill mastered">
-                        <div class="skill-icon">✓</div>
-                        <div>
-                            <strong>Basic Algebra</strong>
-                            <small>Solid foundation confirmed</small>
-                        </div>
-                    </div>
-                    <div class="connector"></div>
-                    <div class="skill needs-work">
-                        <div class="skill-icon">!</div>
-                        <div>
-                            <strong>Algebraic Identities</strong>
-                            <small>Attention recommended</small>
-                        </div>
-                    </div>
-                    <div class="connector"></div>
-                    <div class="skill locked">
-                        <div class="skill-icon">?</div>
-                        <div>
-                            <strong>Factorisation</strong>
-                            <small>Prerequisite gap detected</small>
-                        </div>
-                    </div>
-                    <div class="connector"></div>
-                    <div class="skill locked">
-                        <div class="skill-icon">?</div>
-                        <div>
-                            <strong>Linear Equations</strong>
-                            <small>Queued for next evaluation</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="recommendation">
-                    <div class="recommendation-label">RECOMMENDED NEXT STEP</div>
-                    <h3>Strengthen Algebraic Identities</h3>
-                    <p>Before advancing to factorisation, let's lock down this foundational concept with an interactive mini-lesson.</p>
-                    <button class="primary-button" onclick="startLearning()">
-                        Begin Targeted Lesson
-                        <span>→</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- LEARNING SCREEN -->
-        <section id="learning" class="screen">
-            <div class="learning-container">
-                <div class="small-label">TARGETED MODULE</div>
-                <h2>Algebraic Identities</h2>
-
-                <div class="lesson-card">
-                    <div class="lesson-section">
-                        <h3>Why does this matter?</h3>
-                        <p>Algebraic identities allow us to rapidly expand and simplify complex expressions, serving as the essential bedrock for factorisation and quadratic problem-solving.</p>
-                    </div>
-
-                    <div class="example-box">
-                        <div class="example-label">CORE FORMULA</div>
-                        <div class="equation">(a + b)² = a² + 2ab + b²</div>
-                        <p>This identity lets you expand binomial squares instantly without manual term-by-term multiplication.</p>
-                    </div>
-
-                    <div class="lesson-section">
-                        <h3>Interactive Check</h3>
-                        <p>Which expression correctly expands <strong>(x + 3)²</strong>?</p>
-                        <div class="practice-options">
-                            <button onclick="checkPractice(this, false)">x² + 3x + 9</button>
-                            <button onclick="checkPractice(this, true)">x² + 6x + 9</button>
-                            <button onclick="checkPractice(this, false)">x² + 9</button>
-                        </div>
-                        <div id="practice-result" class="practice-feedback"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>LearnNext · Precision learning through intelligent gap analysis</p>
-    </footer>
-
+    <!-- Link your frontend JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
