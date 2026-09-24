@@ -1,76 +1,42 @@
 from fastapi import APIRouter, HTTPException
+from models.student import StudentProfile, StudentRegister
 
-from models.student import Student, StudentUpdate
+router = APIRouter(prefix="/students", tags=["students"])
 
-router = APIRouter(
-    prefix="/api/student",
-    tags=["Student"]
-)
-
-students = {}
-
-
-@router.post("/")
-def create_student(student: Student):
-
-    if student.student_id in students:
-        raise HTTPException(
-            status_code=409,
-            detail="Student already exists"
-        )
-
-    students[student.student_id] = student
-
-    return {
-        "success": True,
-        "student": student
+# Mutable mock database initialized with a sample student
+fake_student_db = {
+    "STU001": {
+        "student_id": "STU001",
+        "name": "Alex Johnson",
+        "skill_level": "Intermediate",
+        "completed_courses": ["Algebra Basics", "Motion & Force"],
+        "current_roadmap": "Math & Science Fundamentals"
     }
+}
 
-
-@router.get("/{student_id}")
-def get_student(student_id: str):
-
-    student = students.get(student_id)
-
+@router.get("/{student_id}", response_model=StudentProfile)
+def get_student_profile(student_id: str):
+    student = fake_student_db.get(student_id.upper())
     if not student:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
+        raise HTTPException(status_code=404, detail="Student profile not found. Try registering below or use STU001.")
+    return student
 
-    return {
-        "success": True,
-        "student": student
+@router.post("/register", response_model=StudentProfile)
+def register_student(payload: StudentRegister):
+    s_id = payload.student_id.upper().strip()
+    if s_id in fake_student_db:
+        raise HTTPException(status_code=400, detail="Student ID already exists!")
+    
+    # Process comma-separated course list safely
+    courses = [c.strip() for c in payload.completed_courses.split(",") if c.strip()]
+    
+    new_student = {
+        "student_id": s_id,
+        "name": payload.name.strip(),
+        "skill_level": payload.skill_level,
+        "completed_courses": courses,
+        "current_roadmap": payload.current_roadmap.strip() if payload.current_roadmap else "General STEM"
     }
-
-
-@router.patch("/{student_id}")
-def update_student(
-    student_id: str,
-    update: StudentUpdate
-):
-
-    student = students.get(student_id)
-
-    if not student:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
-
-    updated_data = student.model_dump()
-
-    for key, value in update.model_dump(
-        exclude_unset=True
-    ).items():
-
-        updated_data[key] = value
-
-    updated_student = Student(**updated_data)
-
-    students[student_id] = updated_student
-
-    return {
-        "success": True,
-        "student": updated_student
-    }
+    
+    fake_student_db[s_id] = new_student
+    return new_student
