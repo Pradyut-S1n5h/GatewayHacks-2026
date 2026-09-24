@@ -1,36 +1,108 @@
-// Replace with your actual backend public URL (no trailing slash at the end)[span_2](start_span)[span_2](end_span)
-const API_BASE_URL = "yourbackendURL.dev";
+const API_BASE = "http://localhost:8000";
 
-async function fetchStudentReport() {
-    const outputDiv = document.getElementById("output");
-    outputDiv.textContent = "Connecting to backend and generating report/roadmap...";
+// 1. Student Profile Lookup
+document.getElementById('searchBtn').addEventListener('click', async () => {
+    const studentId = document.getElementById('studentIdInput').value.trim();
+    const resultBox = document.getElementById('profileResult');
+    
+    if (!studentId) {
+        alert("Please enter a Student ID");
+        return;
+    }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/student/`, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify({
-                student_id: "student_1",
-                name: "Aarav",
-                grade: 9,
-                subjects: ["Mathematics"],
-                language: "en"
-            })
+        const res = await fetch(`${API_BASE}/students/${studentId}`);
+        if (!res.ok) throw new Error("Student ID not found.");
+        const data = await res.json();
+
+        document.getElementById('resId').textContent = data.student_id;
+        document.getElementById('resName').textContent = data.name;
+        document.getElementById('resLevel').textContent = data.skill_level;
+        document.getElementById('resRoadmap').textContent = data.current_roadmap;
+        document.getElementById('resCourses').textContent = data.completed_courses.join(", ");
+        
+        resultBox.classList.remove('hidden');
+    } catch (err) {
+        alert(err.message);
+    }
+});
+
+// 2. Register Student from Webpage
+document.getElementById('registerBtn').addEventListener('click', async () => {
+    const student_id = document.getElementById('regId').value.trim();
+    const name = document.getElementById('regName').value.trim();
+    const skill_level = document.getElementById('regLevel').value;
+    const current_roadmap = document.getElementById('regRoadmap').value.trim();
+    const completed_courses = document.getElementById('regCourses').value.trim();
+    const regResult = document.getElementById('regResult');
+
+    if (!student_id || !name) {
+        alert("Student ID and Name are required!");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/students/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ student_id, name, skill_level, current_roadmap, completed_courses })
         });
 
-        if (!response.ok) {
-            throw new Error(`Server returned status ${response.status}`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.detail || "Registration failed.");
         }
 
-        const data = await response.json();
-        console.log("Success:", data);
+        const data = await res.json();
+        regResult.textContent = `Success! Student profile created for ${data.name} (ID: ${data.student_id}). You can now look it up above!`;
+        regResult.classList.remove('hidden');
+    } catch (err) {
+        alert(err.message);
+    }
+});
 
-        // Display the received student report and roadmap nicely on the webpage
-        outputDiv.textContent = JSON.stringify(data, null, 2);
-    } catch (error) {
-        console.error("Error connecting to backend:", error);
-        outputDiv.textContent = "Error: Could not fetch data. Check if your backend terminal is running and your API_BASE_URL is updated.";
+// 3. Fetch NCERT Study Materials (Math/Science, No Email required)
+async function fetchStudyMaterial(subject) {
+    const resultBox = document.getElementById('materialResult');
+    try {
+        const res = await fetch(`${API_BASE}/learn/materials/${subject}`);
+        if (!res.ok) throw new Error("Could not load materials.");
+        const data = await res.json();
+
+        document.getElementById('matTitle').textContent = data.title;
+        document.getElementById('matDesc').textContent = data.description;
+        document.getElementById('matLink').href = data.reference_link;
+        
+        resultBox.classList.remove('hidden');
+    } catch (err) {
+        alert(err.message);
     }
 }
+
+// 4. AI Doubt Mechanism
+document.getElementById('askAiBtn').addEventListener('click', async () => {
+    const subject = document.getElementById('doubtSubject').value;
+    const question = document.getElementById('doubtQuestion').value.trim();
+    const aiResultBox = document.getElementById('aiResult');
+
+    if (!question) {
+        alert("Please type a question.");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/learn/ai-doubt`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject, question })
+        });
+        
+        if (!res.ok) throw new Error("Failed to get AI response.");
+        const data = await res.json();
+
+        document.getElementById('aiAnswerText').textContent = data.ai_response;
+        aiResultBox.classList.remove('hidden');
+    } catch (err) {
+        alert(err.message);
+    }
+});
