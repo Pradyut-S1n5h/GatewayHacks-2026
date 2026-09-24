@@ -3,60 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LearnNext - Student Report & Roadmap</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background-color: #0f172a; 
-            color: #f8fafc; 
-            padding: 30px; 
-        }
-        .container { 
-            max-width: 800px; 
-            margin: auto; 
-            background: #1e293b; 
-            padding: 30px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
-        }
-        button { 
-            background: #6366f1; 
-            color: white; 
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            font-weight: bold;
-        }
-        button:hover { 
-            background: #4f46e5; 
-        }
-        #output { 
-            margin-top: 20px; 
-            background: #0f172a; 
-            padding: 20px; 
-            border-radius: 6px; 
-            white-space: pre-wrap; 
-            font-family: monospace; 
-            max-height: 400px; 
-            overflow-y: auto;
-            color: #38bdf8;
-            border: 1px solid #334155;
-        }
-    </style>
+    <title>GatewayHacks - STEM Learning & Student Portal</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>LearnNext Dashboard</h1>
-        <p>Click below to generate and view the student report and roadmap via the FastAPI backend[span_0](start_span)[span_0](end_span):</p>
-        
-        <button onclick="fetchStudentReport()">Generate Student Report & Roadmap</button>
-        
-        <div id="output">Report and roadmap data will appear here...</div>
+    <div class="main-container">
+        <header>
+            <h1>GatewayHacks STEM Portal</h1>
+            <p>Manage student profiles, access NCERT Math & Science materials, and ask AI doubts instantly.</p>
+        </header>
+
+        <!-- Section 1: Student Profile Lookup -->
+        <section class="card">
+            <h2>Search Student Profile</h2>
+            <div class="search-box">
+                <input type="text" id="studentIdInput" placeholder="Enter ID (e.g. STU001)...">
+                <button id="searchBtn">Lookup Profile</button>
+            </div>
+            <div id="profileResult" class="result-box hidden">
+                <p><strong>ID:</strong> <span id="resId"></span></p>
+                <p><strong>Name:</strong> <span id="resName"></span></p>
+                <p><strong>Level:</strong> <span id="resLevel"></span></p>
+                <p><strong>Roadmap:</strong> <span id="resRoadmap"></span></p>
+                <p><strong>Completed Courses:</strong> <span id="resCourses"></span></p>
+            </div>
+        </section>
+
+        <!-- Section 2: Register New Student (Webpage Form) -->
+        <section class="card">
+            <h2>Register New Student</h2>
+            <div class="form-group">
+                <input type="text" id="regId" placeholder="Student ID (e.g. STU002)">
+                <input type="text" id="regName" placeholder="Full Name">
+                <select id="regLevel">
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+                <input type="text" id="regRoadmap" placeholder="Current Roadmap (e.g. Algebra Mastery)">
+                <input type="text" id="regCourses" placeholder="Completed Courses (comma-separated)">
+                <button id="registerBtn">Create Profile</button>
+            </div>
+            <div id="regResult" class="result-box hidden success-box"></div>
+        </section>
+
+        <!-- Section 3: Math & Science NCERT Study Materials -->
+        <section class="card">
+            <h2>NCERT Study Materials (Math & Science)</h2>
+            <div class="subject-buttons">
+                <button onclick="fetchStudyMaterial('math')">View Math Hub</button>
+                <button onclick="fetchStudyMaterial('science')">View Science Hub</button>
+            </div>
+            <div id="materialResult" class="result-box hidden">
+                <h3 id="matTitle"></h3>
+                <p id="matDesc"></p>
+                <a id="matLink" href="#" target="_blank">Access Official NCERT Resource Link</a>
+            </div>
+        </section>
+
+        <!-- Section 4: AI Doubt Solver -->
+        <section class="card">
+            <h2>AI Doubt Mechanism</h2>
+            <select id="doubtSubject">
+                <option value="Math">Math</option>
+                <option value="Science">Science</option>
+            </select>
+            <textarea id="doubtQuestion" placeholder="Ask your math or science question here..."></textarea>
+            <button id="askAiBtn">Ask AI Tutor</button>
+            <div id="aiResult" class="result-box hidden">
+                <strong>AI Answer:</strong>
+                <p id="aiAnswerText"></p>
+            </div>
+        </section>
     </div>
 
-    <!-- Link your frontend JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
