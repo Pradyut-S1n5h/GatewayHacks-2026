@@ -1,27 +1,16 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Optional
 
-class Student(BaseModel):
+class StudentProfile(BaseModel):
     student_id: str
-    name: Optional[str] = None
-    grade: int = Field(ge=1, le=12)
-    subjects: List[str] = []
-    strengths: List[str] = []
-    weaknesses: List[str] = []
-    learning_level: str = "beginner"
-    language: str = "en"  # Supports India-First multilingual design ("en" or "hi")
-    streak: int = 0
-    xp: int = 0
-    rank: str = "Bronze"
+    name: str
+    skill_level: str
+    completed_courses: List[str]
+    current_roadmap: Optional[str] = None
 
-class StudentUpdate(BaseModel):
-    name: Optional[str] = None
-    grade: Optional[int] = Field(default=None, ge=1, le=12)
-    subjects: Optional[List[str]] = None
-    strengths: Optional[List[str]] = None
-    weaknesses: Optional[List[str]] = None
-    learning_level: Optional[str] = None
-    language: Optional[str] = None
-    streak: Optional[int] = None
-    xp: Optional[int] = None
-    rank: Optional[str] = None
+class StudentRegister(BaseModel):
+    student_id: str
+    name: str
+    skill_level: str
+    completed_courses: str  # Comma-separated string from form
+    current_roadmap: Optional[str] = None
