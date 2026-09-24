@@ -1,64 +1,34 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from services.ai import query_ai_doubt
 
-from api.student import students
-from services.ai import generate_response
-from services.personalization import build_student_context
+router = APIRouter(prefix="/learn", tags=["learn"])
 
-router = APIRouter(
-    prefix="/api/learn",
-    tags=["Learning"]
-)
+class DoubtRequest(BaseModel):
+    subject: str
+    question: str
 
-
-class LearnRequest(BaseModel):
-    student_id: str
-    topic: str
-
-
-@router.post("/")
-def learn(request: LearnRequest):
-
-    student = students.get(request.student_id)
-
-    if not student:
-        raise HTTPException(
-            status_code=404,
-            detail="Student not found"
-        )
-
-    context = build_student_context(student)
-
-    system_prompt = """
-You are a personalized AI tutor.
-
-Teach the requested topic according to the
-student's grade and learning level.
-
-Use:
-- simple explanations
-- examples
-- step-by-step reasoning
-- a short check-for-understanding question
-
-Do not overwhelm the student.
-"""
-
-    user_prompt = f"""
-{context}
-
-Teach this topic:
-
-{request.topic}
-"""
-
-    result = generate_response(
-        system_prompt,
-        user_prompt
-    )
-
-    return {
-        "success": True,
-        "topic": request.topic,
-        "lesson": result
+NCERT_RESOURCES = {
+    "math": {
+        "title": "NCERT Mathematics Learning Hub",
+        "description": "Official curriculum chapters, practice problem sets, and theorem proofs.",
+        "reference_link": "https://ncert.nic.in/textbook.php"
+    },
+    "science": {
+        "title": "NCERT Science Learning Hub",
+        "description": "Physics, Chemistry, and Biology chapters with interactive experiments and summaries.",
+        "reference_link": "https://ncert.nic.in/textbook.php"
     }
+}
+
+@router.get("/materials/{subject}")
+def get_study_materials(subject: str):
+    sub = subject.lower()
+    if sub not in NCERT_RESOURCES:
+        raise HTTPException(status_code=404, detail="Subject material not found. Choose 'math' or 'science'.")
+    return NCERT_RESOURCES[sub]
+
+@router.post("/ai-doubt")
+def ask_ai_doubt(payload: DoubtRequest):
+    answer = query_ai_doubt(payload.subject, payload.question)
+    return {"subject": payload.subject, "question": payload.question, "ai_response": answer}
