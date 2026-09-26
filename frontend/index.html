@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GatewayHacks STEM Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-slate-950">
+
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-tr from-cyan-500 to-indigo-600 text-slate-950 font-black px-3 py-1.5 rounded-xl text-lg shadow-md shadow-cyan-500/20">GH</div>
+            <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">STEM Intelligence Hub</h1>
+        </div>
+        <div id="nav-user-info" class="hidden flex items-center space-x-4">
+            <span id="nav-name" class="text-sm font-medium text-slate-300"></span>
+            <span id="nav-xp" class="bg-cyan-500/10 text-cyan-400 text-xs px-3 py-1.5 rounded-full font-bold border border-cyan-500/30"></span>
+            <button onclick="logout()" class="text-xs bg-rose-500/10 text-rose-400 border border-rose-500/30 px-3.5 py-1.5 rounded-xl hover:bg-rose-500/20 transition">Logout</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 space-y-8">
+        <!-- AUTH SECTION -->
+        <section id="auth-section" class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12">
+            <div class="bg-slate-900/90 border border-slate-800 p-8 rounded-3xl shadow-2xl space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-cyan-400 mb-1">Welcome Back</h2>
+                    <p class="text-xs text-slate-400">Log in with Student ID & Password (Demo: STU002 / password123).</p>
+                </div>
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1 font-medium">Student ID</label>
+                        <input type="text" id="login-id" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-cyan-500 outline-none transition" placeholder="STU002">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1 font-medium">Password</label>
+                        <input type="password" id="login-password" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-cyan-500 outline-none transition" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-cyan-500 text-slate-950 font-bold py-3 rounded-xl hover:bg-cyan-400 transition shadow-lg shadow-cyan-500/20">Login</button>
+                </form>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 p-8 rounded-3xl shadow-2xl space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-indigo-400 mb-1">New Account</h2>
+                    <p class="text-xs text-slate-400">Register securely with a custom password.</p>
+                </div>
+                <form onsubmit="handleRegister(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1 font-medium">New Student ID</label>
+                        <input type="text" id="reg-id" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition" placeholder="STU003">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1 font-medium">Full Name</label>
+                        <input type="text" id="reg-name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition" placeholder="Jane Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1 font-medium">Secure Password</label>
+                        <input type="password" id="reg-password" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20">Register</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard-section" class="hidden space-y-8">
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
+                    <h3 class="text-lg font-bold text-cyan-400">👤 Student Profile</h3>
+                    <div id="profile-details" class="space-y-2 text-sm text-slate-300"></div>
+                </div>
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-3xl shadow-xl md:col-span-2 space-y-4">
+                    <h3 class="text-lg font-bold text-indigo-400">🏆 Live Global Leaderboard</h3>
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-slate-400 border-b border-slate-800">
+                            <tr><th class="pb-3">Rank</th><th class="pb-3">Name</th><th class="pb-3">Level</th><th class="pb-3 text-right">XP</th></tr>
+                        </thead>
+                        <tbody id="leaderboard-body" class="divide-y divide-slate-800/40"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-cyan-400 mb-1">🗺️ Visual Graphic Roadmap</h3>
+                        <p class="text-xs text-slate-400 mb-4">Milestone pathways tracker.</p>
+                    </div>
+                    <div id="roadmap-container" class="space-y-3 my-auto py-2"></div>
+                </div>
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-400 mb-1">📈 Progress Graph</h3>
+                        <p class="text-xs text-slate-400 mb-2">Score progression trends over time.</p>
+                    </div>
+                    <div class="h-56"><canvas id="progressChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-3xl shadow-xl space-y-4">
+                    <h3 class="text-lg font-bold text-cyan-400">⚡ On-the-Spot AI Diagnostic Test</h3>
+                    <div class="flex space-x-2">
+                        <input type="text" id="diag-topic" value="Quantum Physics" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm outline-none focus:border-cyan-500">
+                        <button onclick="generateTest()" class="bg-cyan-500 text-slate-950 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-cyan-400 transition">Make Test</button>
+                    </div>
+                    <div id="diagnostic-container" class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-sm min-h-[140px] flex flex-col justify-center text-slate-400">Click 'Make Test' to generate an instant assessment.</div>
+                </div>
+
+                <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-3xl shadow-xl space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-400 mb-3">🤖 AI Chatbot Tutor</h3>
+                        <div class="grid grid-cols-4 gap-2 mb-3">
+                            <select id="doubt-subject" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs outline-none"><option value="Math">Math</option><option value="Physics">Physics</option></select>
+                            <input type="text" id="doubt-input" placeholder="Ask your AI tutor..." class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs outline-none focus:border-indigo-500">
+                        </div>
+                        <button onclick="askAI()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-xl text-xs hover:bg-indigo-500 transition">Ask AI Chatbot</button>
+                    </div>
+                    <div id="ai-answer-box" class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-xs text-slate-300 hidden max-h-28 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
